@@ -7,6 +7,7 @@ import javax.persistence.Query;
 
 import br.com.caelum.vraptor.ioc.Component;
 import br.com.flavio.movy.model.Filme;
+import br.com.flavio.movy.teste.FilmeInexistente;
 
 @Component
 public class FilmeBusiness {
@@ -21,8 +22,12 @@ public class FilmeBusiness {
 		return manager.merge(filme);
 	}
 	
-	public Filme loadById(long id){
-		return manager.find(Filme.class, id);
+	public Filme loadById(long id) throws FilmeInexistente{
+		Filme filme = manager.find(Filme.class, id);
+		if(filme == null){
+			throw new FilmeInexistente();
+		}
+		return filme;
 	}
 	
 	public void remove(Filme filme){

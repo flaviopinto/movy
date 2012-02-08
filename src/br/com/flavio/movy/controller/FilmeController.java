@@ -30,9 +30,12 @@ public class FilmeController {
 	
 	@Get("/filme/{filme.id}")
 	public void exibir(Filme filme){
-		filme = filmeBusiness.loadById(filme.getId());
-		
-		result.include("filme", filme);
+		try {
+			filme = filmeBusiness.loadById(filme.getId());
+			result.include("filme", filme);
+		} catch (Exception e) {
+			result.include("error", e.getMessage());
+		}
 	}
 	
 	@Get("/filme/{filme.id}/editar")
@@ -44,7 +47,7 @@ public class FilmeController {
 	
 	@Get("/filme/novo")
 	public void novo() {
-		
+		return;
 	}
 	
 	@Get("/filme")
@@ -58,14 +61,16 @@ public class FilmeController {
 	public void salvar(Filme filme){
 		filme = filmeBusiness.save(filme);
 		
-		result.include("message", "Filme salvo com sucesso!").redirectTo(this).exibir(filme);
+		result.include("message", "O filme foi salvo com sucesso.");
+		result.redirectTo(this).exibir(filme);
 	}
 
 	@Delete("/filme/{filme.id}")
 	public void remover(Filme filme){
 		filmeBusiness.remove(filme);
 		
-		result.include("message", "Filme removido com sucesso!").redirectTo(this).listagem();
+		result.include("message", "O filme foi removido com sucesso.")
+			  .redirectTo(this).listagem();
 	}
 	
 }
